@@ -17,7 +17,7 @@ document.getElementById('generate').addEventListener('click', function(){
         console.log(data);
         //add data to post request
         let userResponse = document.getElementById('feelings').value;
-        postData('/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
+        postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
         updateUI();
     })
 });
@@ -62,7 +62,7 @@ const postData = async(url = '', dataObject) => {
 //function to display data retrieved to in the UI 
 const updateUI = async () => {
     //request to get stored projectData from server.js via all route
-    const request = await fetch('/all');
+    const request = await fetch('http://localhost:2000/all');
     try {
         //converts dataCollection from string to json
         const dataCollection = await request.json();
