@@ -17,6 +17,10 @@ document.getElementById('generate').addEventListener('click', function(){
     getData(baseUrl)
     .then(function(data){
         console.log(data);
+        let lat = data.geonames[0].lat;
+        let long = data.geonames[0].lng;
+        let country = data.geonames[0].countryName;
+        console.log(lat, long, country)
         //add data to post request
         // let userResponse = document.getElementById('feelings').value;
         // postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
