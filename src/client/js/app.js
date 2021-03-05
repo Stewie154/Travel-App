@@ -1,8 +1,9 @@
 /* Global Variables */
 const apiKey = 'c385c18d161b14df158500c5452637e5';
 const countryCode = 'US';
-let userZipCode;
-let baseUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${userZipCode},${countryCode}&appid=${apiKey}`;
+const userName = 'stewart_mcfarlane';
+let userCity;
+let baseUrl;
 
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -10,15 +11,16 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
 document.getElementById('generate').addEventListener('click', function(){
-    userZipCode = document.getElementById('zip').value;
-    baseUrl = `http://api.openweathermap.org/data/2.5/weather?zip=${userZipCode},${countryCode}&appid=${apiKey}`
+    userCity= document.getElementById('city').value;
+    //geonames.org fetch call
+    baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
     getData(baseUrl)
     .then(function(data){
         console.log(data);
         //add data to post request
-        let userResponse = document.getElementById('feelings').value;
-        postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
-        updateUI();
+        // let userResponse = document.getElementById('feelings').value;
+        // postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
+        // updateUI();
     })
 });
 
