@@ -17,14 +17,33 @@
       </div>
       <div class="question">
         <label for="date">When Are You Going?</label>
-        <input class="myInput" id="date" placeholder="dd/mm/yyyy" rows="9" cols="50"></input>
+        <input class="myInput" id="date" placeholder="Day" type="number"></input>
+        <select name="month" id="day" placeholder="Month">
+          <option value="January">January</option>
+          <option value="February">February</option>
+          <option value="March">March</option>
+          <option value="April">April</option>
+          <option value="May">May</option>
+          <option value="June">June</option>
+          <option value="July">July</option>
+          <option value="August">August</option>
+          <option value="September">September</option>
+          <option value="October">October</option>
+          <option value="November">November</option>
+          <option value="December">December</option>
+        </select>
+        <select name="year" id="year">
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+        </select>
       </div>
     </main>
     <button id="generate" type="submit"> Generate Trip </button>
   </div>
-  <h2>Your Trips</h2>
+  <h2>Your Trips:</h2>
   <div class="trips-container">
-    <div class="trip">
+    <!-- <div class="trip">
       <div class="left-side">
         <h4 class="destination">Destination</h4>
         <p>The weather will be: <span id="temperature">25 degrees</span></p>
@@ -45,7 +64,7 @@
       <div class="right-side">
         <img src="" alt="">
       </div>
-    </div>
+    </div> -->
   </div>
 </body>
 </html>

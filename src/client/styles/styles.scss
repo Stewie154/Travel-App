@@ -41,6 +41,7 @@ main {
         justify-content: space-around;
         flex-wrap: wrap;
     }
+
     .question {
         display: flex;
         flex-direction: column;
@@ -54,12 +55,14 @@ main {
             background-color: rgb(37, 92, 192);
             border-bottom: 1px solid black;
         }
+
         label {
             margin: 25px;
             display:block;
             font-size: 27px;
             text-align: center;
         }
+
         input {
             margin: 25px;
             text-align: center;
@@ -74,6 +77,11 @@ main {
             @media screen and (max-width: 700px){
                 background:rgb(62, 114, 211);
             }
+        }
+
+        select {
+            margin: 25px;
+            font-size: 2em;
         }
     }
 }
