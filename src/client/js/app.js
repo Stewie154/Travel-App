@@ -1,12 +1,16 @@
 /* Global Variables */
 const wbApiKey = '898dd45145c1421d9c7b8c5a06c06f42';
 let wbBaseUrl;
+const pxAbayApiKey = '20587250-ac9af3276366082f33b68d905';
+let pxBaseUrl;
 const countryCode = 'US';
 const userName = 'stewart_mcfarlane';
 let userCity;
 let tripDate;
 let baseUrl;
-import {calcDateDifference} from './dateDifference'
+//imported functions
+import {calcDateDifference} from './dateDifference';
+import {replaceSpaces} from './replaceSpaces';
 
 // Create a new date instance dynamically with JS
 let todayDate = new Date();
@@ -15,20 +19,22 @@ let todayDate = new Date();
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
 document.getElementById('generate').addEventListener('click', function(){
     userCity = document.getElementById('city').value;
+    //searchParam will be used in 3rd api call (pixabay)
+    let searchParam = replaceSpaces(userCity);
+    // console.log(searchParam)
     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
     getData(baseUrl)
     .then(function(data){
-        console.log(data);
         let lat = data.geonames[0].lat;
         let lon = data.geonames[0].lng;
         let country = data.geonames[0].countryName;
         let daysToTrip = calcDateDifference(todayDate, tripDate);
-        console.log(lat, lon, country);
-        console.log(tripDate);
-        console.log(todayDate);
-        console.log(daysToTrip);
+        // console.log(lat, lon, country);
+        // console.log(tripDate);
+        // console.log(todayDate);
+        // console.log(daysToTrip);
         //if trip is within a week, get current weather
         if(daysToTrip <= 7) {
             wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
@@ -46,8 +52,13 @@ document.getElementById('generate').addEventListener('click', function(){
                 console.log(temp)
             })
         }
-       
+       //pixabay api call (for picture)
         
+        pxBaseUrl = `https://pixabay.com/api/key=${pxAbayApiKey}&q=${searchParam}&image_type=photo&pretty=true`;
+        getData(pxBaseUrl)
+        .then(function (data) {
+            
+        })
 
         //add data to post request
         // let userResponse = document.getElementById('feelings').value;
