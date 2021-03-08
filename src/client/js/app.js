@@ -1,17 +1,22 @@
 /* Global Variables */
-const apiKey = 'c385c18d161b14df158500c5452637e5';
+const WbApiKey = '898dd45145c1421d9c7b8c5a06c06f42';
 const countryCode = 'US';
 const userName = 'stewart_mcfarlane';
 let userCity;
+let tripDate;
 let baseUrl;
+import {calcDateDifference} from './dateDifference'
 
 // Create a new date instance dynamically with JS
-let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let todayDate = new Date();
+// let newDate = d.getMonth()+'.'+ d.getDay()+'.'+ d.getFullYear();
 
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
 document.getElementById('generate').addEventListener('click', function(){
-    userCity= document.getElementById('city').value;
+    userCity = document.getElementById('city').value;
+    // tripDate = document.getElementById('day').value + '.' + document.getElementById('month').value + '.' + document.getElementById('year').value
+    // tripDate = new Date(document.getElementById('month').value + '/' + document.getElementById('day').value + '/' + document.getElementById('year').value)
+    tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
     getData(baseUrl)
@@ -21,6 +26,9 @@ document.getElementById('generate').addEventListener('click', function(){
         let long = data.geonames[0].lng;
         let country = data.geonames[0].countryName;
         console.log(lat, long, country)
+        console.log(tripDate)
+        console.log(todayDate)
+        console.log(calcDateDifference(todayDate, tripDate))
         //add data to post request
         // let userResponse = document.getElementById('feelings').value;
         // postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
