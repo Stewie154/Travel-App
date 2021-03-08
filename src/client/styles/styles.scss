@@ -104,14 +104,75 @@ button{
     }
 }
 
-.pic-display {
+h2 {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 3em;
+    margin: 25px;
+    @media screen and (max-width: 700px){
+        font-size: 2.5em;
+    }
+}
+
+.trips-container {
     width: 100%;
-    min-height: 50vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: pink;
+    flex-wrap: wrap;
+    
+    .trip {
+        width: 100%;
+        min-height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(37, 92, 192);
+        border-bottom: 1px solid #000;
+        @media screen and (max-width: 700px) {
+            flex-direction: column;
+        }
+        
+        .left-side {
+            width: 50%;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            @media screen and (max-width: 700px) {
+                width: 100%;
+            }
+
+            .destination {
+                text-decoration: underline;
+                margin: 25px;
+                font-size: 2em;
+            }
+
+            p {
+                margin: 25px;
+            }
+
+            span {
+                font-weight: bold;
+            }
+        }
+    
+        .right-side {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+            min-height: 50vh;
+            background-color:rgb(44, 99, 202);
+            @media screen and (max-width: 700px) {
+                width: 100%;
+            }
+        }
+    }
 }
+
 
 #final-pic{
     border: 1px solid #fff;
