@@ -1,5 +1,6 @@
 /* Global Variables */
-const WbApiKey = '898dd45145c1421d9c7b8c5a06c06f42';
+const wbApiKey = '898dd45145c1421d9c7b8c5a06c06f42';
+let wbBaseUrl;
 const countryCode = 'US';
 const userName = 'stewart_mcfarlane';
 let userCity;
@@ -14,8 +15,6 @@ let todayDate = new Date();
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
 document.getElementById('generate').addEventListener('click', function(){
     userCity = document.getElementById('city').value;
-    // tripDate = document.getElementById('day').value + '.' + document.getElementById('month').value + '.' + document.getElementById('year').value
-    // tripDate = new Date(document.getElementById('month').value + '/' + document.getElementById('day').value + '/' + document.getElementById('year').value)
     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
@@ -23,12 +22,33 @@ document.getElementById('generate').addEventListener('click', function(){
     .then(function(data){
         console.log(data);
         let lat = data.geonames[0].lat;
-        let long = data.geonames[0].lng;
+        let lon = data.geonames[0].lng;
         let country = data.geonames[0].countryName;
-        console.log(lat, long, country)
-        console.log(tripDate)
-        console.log(todayDate)
-        console.log(calcDateDifference(todayDate, tripDate))
+        let daysToTrip = calcDateDifference(todayDate, tripDate);
+        console.log(lat, lon, country);
+        console.log(tripDate);
+        console.log(todayDate);
+        console.log(daysToTrip);
+        //if trip is within a week, get current weather
+        if(daysToTrip <= 7) {
+            wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
+            getData(wbBaseUrl)
+            .then(function(data) {
+                let temp = data.data[0].temp
+                console.log(temp)
+            })
+        } //if trip longer than a week away, get predicted weather forecast data
+        else {
+            wbBaseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${wbApiKey}`
+            getData(wbBaseUrl)
+            .then(function (data) {
+                let temp = data.data[15].temp
+                console.log(temp)
+            })
+        }
+       
+        
+
         //add data to post request
         // let userResponse = document.getElementById('feelings').value;
         // postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
