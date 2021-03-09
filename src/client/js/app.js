@@ -9,6 +9,7 @@ let userCity;
 let tripDate;
 let baseUrl;
 let temperature;
+let imgUrl;
 //imported functions
 import {calcDateDifference} from './dateDifference';
 import {replaceSpaces} from './replaceSpaces';
@@ -57,7 +58,7 @@ document.getElementById('generate').addEventListener('click',  function(){
         pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
          getData(pxBaseUrl)
         .then(function (data) {
-            let imgUrl = data.hits[0].largeImageURL;
+            imgUrl = data.hits[0].largeImageURL;
             console.log(imgUrl)
         })
          // add data to post request
@@ -67,12 +68,11 @@ document.getElementById('generate').addEventListener('click',  function(){
             city: userCity, 
             temperature: temperature, 
             tripDate: tripDate, 
-            daysToTrip: daysToTrip })
+            daysToTrip: daysToTrip, 
+            imgUrl: imgUrl
+        })
         )
-
-       
-        
-        // updateUI();
+        updateUI();
     })
 });
 
@@ -120,10 +120,34 @@ const updateUI = async () => {
     try {
         //converts dataCollection from string to json
         const dataCollection = await request.json();
-        //display the date, temp, userResponse from last element in DC array, always displays latest entry
-        document.getElementById('date').innerHTML = 'Date: ' + dataCollection[dataCollection.length -1].date;
-        document.getElementById('temp').innerHTML = 'Temperature: ' + dataCollection[dataCollection.length -1].temperature;
-        document.getElementById('content').innerHTML = 'Feelings: ' + dataCollection[dataCollection.length -1].userResponse;
+        //grab values
+        let country = dataCollection[dataCollection.length -1].country;
+        let city = dataCollection[dataCollection.length -1].city;
+        let temperature = dataCollection[dataCollection.length -1].temperature;
+        let tripDate = dataCollection[dataCollection.length -1].tripDate;
+        let daysToTrip = dataCollection[dataCollection.length -1].daysToTrip;
+        let imgUrl = dataCollection[dataCollection.length -1].daysToTrip;
+        
+        //create 'trip' using the same elements as hard-coded trips
+        const trip = `
+        <div class="trip">
+            <div class="left-side">
+                <h4 class="destination">Your destination is: ${city}, ${country}</h4>
+                <p>The closet weather forecast reads: <span id="temperature"> ${temperature} </span>degrees</p>
+                <p>You're leaving on: <span id="display-date">${tripDate}</span></p>
+                <p>Your trip is in <span id="countdown">${daysToTrip}</span> days!</p>
+            </div>
+            <div class="right-side">
+                <img src=${imgUrl} alt="">
+            </div>
+        </div>
+        `
+        //grab container
+        const tripContainer = document.getElementsByClassName('trips-container');
+
+        //add trip to container
+        tripContainer.insertAdjacentHTML('afterbegin', trip);
+        
     } catch (error){
         console.log('Error!', error);
     }
