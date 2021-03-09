@@ -8,6 +8,7 @@ const userName = 'stewart_mcfarlane';
 let userCity;
 let tripDate;
 let baseUrl;
+let temperature;
 //imported functions
 import {calcDateDifference} from './dateDifference';
 import {replaceSpaces} from './replaceSpaces';
@@ -17,7 +18,7 @@ let todayDate = new Date();
 // let newDate = d.getMonth()+'.'+ d.getDay()+'.'+ d.getFullYear();
 
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
-document.getElementById('generate').addEventListener('click', function(){
+document.getElementById('generate').addEventListener('click',  function(){
     userCity = document.getElementById('city').value;
     //searchParam will be used in 3rd api call (pixabay)
     let searchParam = replaceSpaces(userCity);
@@ -25,8 +26,8 @@ document.getElementById('generate').addEventListener('click', function(){
     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
-    getData(baseUrl)
-    .then(function(data){
+     getData(baseUrl)
+    .then( function(data){
         let lat = data.geonames[0].lat;
         let lon = data.geonames[0].lng;
         let country = data.geonames[0].countryName;
@@ -39,22 +40,22 @@ document.getElementById('generate').addEventListener('click', function(){
         if(daysToTrip <= 7) {
             wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
             getData(wbBaseUrl)
-            .then(function(data) {
-                let temp = data.data[0].temp
-                console.log(temp)
+            .then(function (data) {
+                temperature = data.data[0].temp
+                console.log(temperature)
             })
         } //if trip longer than a week away, get predicted weather forecast data
         else {
             wbBaseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${wbApiKey}`
             getData(wbBaseUrl)
             .then(function (data) {
-                let temp = data.data[15].temp
-                console.log(temp)
+                temperature = data.data[15].temp
+                console.log(temperature)
             })
         }
        //pixabay api call (for picture)
         pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
-        getData(pxBaseUrl)
+         getData(pxBaseUrl)
         .then(function (data) {
             let imgUrl = data.hits[0].largeImageURL;
             console.log(imgUrl)
@@ -64,7 +65,7 @@ document.getElementById('generate').addEventListener('click', function(){
             postData('http://localhost:2000/addData', { 
             country: country, 
             city: userCity, 
-            temperature: temp, 
+            temperature: temperature, 
             tripDate: tripDate, 
             daysToTrip: daysToTrip })
         )
