@@ -59,10 +59,18 @@ document.getElementById('generate').addEventListener('click', function(){
             let imgUrl = data.hits[0].largeImageURL;
             console.log(imgUrl)
         })
+         // add data to post request
+        .then(
+            postData('http://localhost:2000/addData', { 
+            country: country, 
+            city: userCity, 
+            temperature: temp, 
+            tripDate: tripDate, 
+            daysToTrip: daysToTrip })
+        )
 
-        //add data to post request
-        // let userResponse = document.getElementById('feelings').value;
-        // postData('http://localhost:2000/addData', {temperature: data.main.temp, date: newDate, userResponse: userResponse})
+       
+        
         // updateUI();
     })
 });

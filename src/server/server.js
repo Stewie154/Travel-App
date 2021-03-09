@@ -42,9 +42,11 @@ app.get('/', sendData);
 //addData callback function
 const addData = (request, response) => {
     let newEntry = {
+        country: request.body.country,
+        city: request.body.city,
         temperature: request.body.temperature,
-        date: request.body.date,
-        userResponse: request.body.userResponse
+        tripDate: request.body.tripDate,
+        daysToTrip: request.body.daysToTrip
     }
     //add newEntry object to projectData
     projectData.push(newEntry);
