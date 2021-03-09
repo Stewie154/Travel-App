@@ -53,11 +53,11 @@ document.getElementById('generate').addEventListener('click', function(){
             })
         }
        //pixabay api call (for picture)
-        
-        pxBaseUrl = `https://pixabay.com/api/key=${pxAbayApiKey}&q=${searchParam}&image_type=photo&pretty=true`;
+        pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
         getData(pxBaseUrl)
         .then(function (data) {
-            
+            let imgUrl = data.hits[0].largeImageURL;
+            console.log(imgUrl)
         })
 
         //add data to post request
