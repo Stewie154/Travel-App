@@ -13,6 +13,7 @@ let imgUrl;
 //imported functions
 import {calcDateDifference} from './dateDifference';
 import {replaceSpaces} from './replaceSpaces';
+import {formatDate} from './formatDate';
 
 // Create a new date instance dynamically with JS
 let todayDate = new Date();
@@ -24,7 +25,12 @@ document.getElementById('generate').addEventListener('click', function(){
     //searchParam will be used in 3rd api call (pixabay)
     let searchParam = replaceSpaces(userCity);
     // console.log(searchParam)
+
     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
+    let yearValue = document.getElementById('year').value
+    let formattedDate = formatDate(tripDate, yearValue)
+    // console.log(formattedDate)
+
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
      getData(baseUrl)
@@ -67,7 +73,7 @@ document.getElementById('generate').addEventListener('click', function(){
             country: country, 
             city: userCity, 
             temperature: temperature, 
-            tripDate: tripDate, 
+            tripDate: formattedDate, 
             daysToTrip: daysToTrip, 
             imgUrl: imgUrl
         })
