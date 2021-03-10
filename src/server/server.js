@@ -46,7 +46,8 @@ const addData = (request, response) => {
         city: request.body.city,
         temperature: request.body.temperature,
         tripDate: request.body.tripDate,
-        daysToTrip: request.body.daysToTrip
+        daysToTrip: request.body.daysToTrip,
+        imgUrl: request.body.imgUrl
     }
     //add newEntry object to projectData
     projectData.push(newEntry);

@@ -122,7 +122,7 @@ h2 {
     }
 }
 
-.trips-container {
+#trips-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -154,6 +154,7 @@ h2 {
 
             .destination {
                 text-decoration: underline;
+                text-align: center;
                 margin: 25px;
                 font-size: 2em;
             }
@@ -177,14 +178,13 @@ h2 {
             @media screen and (max-width: 700px) {
                 width: 100%;
             }
+            img {
+                width: 80%;
+                border: 1px solid #fff;
+                border-radius: 5px;
+            }
         }
     }
-}
-
-
-#final-pic{
-    border: 1px solid #fff;
-    border-radius: 5px;
 }
 
 /*  Basic Styling To Override Default For Basic HTML Elements */
