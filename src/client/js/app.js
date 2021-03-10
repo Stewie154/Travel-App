@@ -33,7 +33,7 @@ document.getElementById('generate').addEventListener('click', function(){
 
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
-     getData(baseUrl)
+    getData(baseUrl)
     .then(function(data){
         let lat = data.geonames[0].lat;
         let lon = data.geonames[0].lng;
@@ -62,7 +62,7 @@ document.getElementById('generate').addEventListener('click', function(){
         }
        //pixabay api call (for picture)
         pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
-         getData(pxBaseUrl)
+        getData(pxBaseUrl)
         .then(function (data) {
             imgUrl = data.hits[0].largeImageURL;
             console.log(imgUrl)
