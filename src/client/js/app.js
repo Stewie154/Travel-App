@@ -10,6 +10,7 @@ let tripDate;
 let baseUrl;
 let temperature;
 let imgUrl;
+let cityDisplay;
 //imported functions
 import {calcDateDifference} from './dateDifference';
 import {replaceSpaces} from './replaceSpaces';
@@ -49,7 +50,8 @@ document.getElementById('generate').addEventListener('click', function(){
             getData(wbBaseUrl)
             .then(function (data) {
                 temperature = data.data[0].temp
-                console.log(temperature)
+                cityDisplay = data.data[0].city_name
+                // console.log(temperature, cityDisplay)
             })
         } //if trip longer than a week away, get predicted weather forecast data
         else {
@@ -57,7 +59,8 @@ document.getElementById('generate').addEventListener('click', function(){
             getData(wbBaseUrl)
             .then(function (data) {
                 temperature = data.data[15].temp
-                console.log(temperature)
+                cityDisplay = data.city_name
+                // console.log(temperature, cityDisplay)
             })
         }
        //pixabay api call (for picture)
@@ -71,7 +74,7 @@ document.getElementById('generate').addEventListener('click', function(){
         .then(
             postData('http://localhost:2000/addData', { 
             country: country, 
-            city: userCity, 
+            city: cityDisplay, 
             temperature: temperature, 
             tripDate: formattedDate, 
             daysToTrip: daysToTrip, 
