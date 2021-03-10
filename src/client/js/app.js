@@ -19,7 +19,7 @@ let todayDate = new Date();
 // let newDate = d.getMonth()+'.'+ d.getDay()+'.'+ d.getFullYear();
 
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
-document.getElementById('generate').addEventListener('click',  function(){
+document.getElementById('generate').addEventListener('click', function(){
     userCity = document.getElementById('city').value;
     //searchParam will be used in 3rd api call (pixabay)
     let searchParam = replaceSpaces(userCity);
@@ -28,7 +28,7 @@ document.getElementById('generate').addEventListener('click',  function(){
     //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
      getData(baseUrl)
-    .then( function(data){
+    .then(function(data){
         let lat = data.geonames[0].lat;
         let lon = data.geonames[0].lng;
         let country = data.geonames[0].countryName;
@@ -126,7 +126,7 @@ const updateUI = async () => {
         let temperature = dataCollection[dataCollection.length -1].temperature;
         let tripDate = dataCollection[dataCollection.length -1].tripDate;
         let daysToTrip = dataCollection[dataCollection.length -1].daysToTrip;
-        let imgUrl = dataCollection[dataCollection.length -1].daysToTrip;
+        let imgUrl = dataCollection[dataCollection.length -1].imgUrl;
         
         //create 'trip' using the same elements as hard-coded trips
         const trip = `
@@ -138,16 +138,17 @@ const updateUI = async () => {
                 <p>Your trip is in <span id="countdown">${daysToTrip}</span> days!</p>
             </div>
             <div class="right-side">
-                <img src=${imgUrl} alt="">
+                <img src="${imgUrl}" alt="">
             </div>
         </div>
         `
         //grab container
-        const tripContainer = document.getElementsByClassName('trips-container');
+        const tripContainer = document.getElementById('trips-container');
 
         //add trip to container
         tripContainer.insertAdjacentHTML('afterbegin', trip);
-        
+        console.log('hello')
+
     } catch (error){
         console.log('Error!', error);
     }
