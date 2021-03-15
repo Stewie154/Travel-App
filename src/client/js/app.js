@@ -1,16 +1,21 @@
-/* Global Variables */
+/* Global Variables, empty values will be set throughout various api calls*/
 const wbApiKey = '898dd45145c1421d9c7b8c5a06c06f42';
 let wbBaseUrl;
 const pxAbayApiKey = '20587250-ac9af3276366082f33b68d905';
 let pxBaseUrl;
 const countryCode = 'US';
 const userName = 'stewart_mcfarlane';
+let lat;
+let lon;
+let country;
 let userCity;
 let tripDate;
+let daysToTrip;
 let baseUrl;
 let temperature;
 let imgUrl;
 let cityDisplay;
+let searchParam;
 //imported functions
 import {calcDateDifference} from './dateDifference';
 import {replaceSpaces} from './replaceSpaces';
@@ -18,72 +23,162 @@ import {formatDate} from './formatDate';
 
 // Create a new date instance dynamically with JS
 let todayDate = new Date();
-// let newDate = d.getMonth()+'.'+ d.getDay()+'.'+ d.getFullYear();
+
 
 //grabs generate button, when it's clicked run sendData function with relevant parameters for api call
+// document.getElementById('generate').addEventListener('click', function(){
+//     userCity = document.getElementById('city').value;
+//     //searchParam will be used in 3rd api call (pixabay)
+//     searchParam = replaceSpaces(userCity);
+//     // console.log(searchParam)
+
+//     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
+//     let yearValue = document.getElementById('year').value
+//     let formattedDate = formatDate(tripDate, yearValue)
+//     // console.log(formattedDate)
+
+//     //geonames.org fetch call
+//     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
+//     getData(baseUrl)
+//     .then(function(data){
+//         let lat = data.geonames[0].lat;
+//         let lon = data.geonames[0].lng;
+//         let country = data.geonames[0].countryName;
+//         let daysToTrip = calcDateDifference(todayDate, tripDate);
+//         // console.log(lat, lon, country);
+//         // console.log(tripDate);
+//         // console.log(todayDate);
+//         // console.log(daysToTrip);
+//         //if trip is within a week, get current weather
+//         if(daysToTrip <= 7) {
+//             wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
+//             getData(wbBaseUrl)
+//             .then(function (data) {
+//                 temperature = data.data[0].temp
+//                 cityDisplay = data.data[0].city_name
+//                 // console.log(temperature, cityDisplay)
+//             })
+//         } //if trip longer than a week away, get predicted weather forecast data
+//         else {
+//             wbBaseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${wbApiKey}`
+//             getData(wbBaseUrl)
+//             .then(function (data) {
+//                 temperature = data.data[15].temp
+//                 cityDisplay = data.city_name
+//                 // console.log(temperature, cityDisplay)
+//             })
+//         }
+//        //pixabay api call (for picture)
+//         pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
+//         getData(pxBaseUrl)
+//         .then(function (data) {
+//             imgUrl = data.hits[0].largeImageURL;
+//             console.log(imgUrl)
+//         })
+//          // add data to post request
+//         .then(
+//             postData('http://localhost:2000/addData', { 
+//             country: country, 
+//             city: cityDisplay, 
+//             temperature: temperature, 
+//             tripDate: formattedDate, 
+//             daysToTrip: daysToTrip, 
+//             imgUrl: imgUrl
+//         })
+//         )
+//         .then(
+//             updateUI()
+//         )
+        
+//     })
+// });
+
 document.getElementById('generate').addEventListener('click', function(){
+    handleSubmit()
+})
+
+const geoNamesApiCall = async () => {
+    //grab user city
     userCity = document.getElementById('city').value;
-    //searchParam will be used in 3rd api call (pixabay)
-    let searchParam = replaceSpaces(userCity);
-    // console.log(searchParam)
-
+    //get trip date as Date object
     tripDate = new Date(document.getElementById('year').value, document.getElementById('month').value, document.getElementById('day').value)
+    //grab year
     let yearValue = document.getElementById('year').value
+    //format date
     let formattedDate = formatDate(tripDate, yearValue)
-    // console.log(formattedDate)
-
-    //geonames.org fetch call
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
-    getData(baseUrl)
-    .then(function(data){
-        let lat = data.geonames[0].lat;
-        let lon = data.geonames[0].lng;
-        let country = data.geonames[0].countryName;
-        let daysToTrip = calcDateDifference(todayDate, tripDate);
-        // console.log(lat, lon, country);
-        // console.log(tripDate);
-        // console.log(todayDate);
-        // console.log(daysToTrip);
-        //if trip is within a week, get current weather
-        if(daysToTrip <= 7) {
-            wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
-            getData(wbBaseUrl)
-            .then(function (data) {
+    try {
+        await getData(baseUrl)
+        .then(function(data){
+            lat = data.geonames[0].lat;
+            lon = data.geonames[0].lng;
+            country = data.geonames[0].countryName;
+            daysToTrip = calcDateDifference(todayDate, tripDate);
+            //log with number to check order of api calls (1, 2, 3)
+            console.log('1. ', lat, lon, country, daysToTrip)
+        })
+    } 
+    catch (error) {
+        console.log('Error! (geoNamesApiCall)', error)
+    }
+}
+
+const weatherBitApiCall = async () => {
+
+    if(daysToTrip <= 7) {
+        wbBaseUrl = `http://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${wbApiKey}`;
+        try {
+           await getData(wbBaseUrl)
+           .then(function(data){
                 temperature = data.data[0].temp
                 cityDisplay = data.data[0].city_name
-                // console.log(temperature, cityDisplay)
-            })
-        } //if trip longer than a week away, get predicted weather forecast data
-        else {
-            wbBaseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${wbApiKey}`
-            getData(wbBaseUrl)
-            .then(function (data) {
+                //log with number to check order of api calls (1, 2, 3)
+                console.log('2. ', temperature, cityDisplay)
+           })
+           
+        } catch (error) {
+            console.log('Error! (weatherBitApiCall)', error)
+        }
+    } else {
+        wbBaseUrl = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${wbApiKey}`
+        try {
+            await getData(wbBaseUrl)
+            .then(function(data){
                 temperature = data.data[15].temp
                 cityDisplay = data.city_name
-                // console.log(temperature, cityDisplay)
+                //log with number to check order of api calls (1, 2, 3)
+                console.log('2. ', temperature, cityDisplay)
             })
+            
+        } catch (error) {
+            console.log('Error! (weatherBitApiCall)', error)
         }
-       //pixabay api call (for picture)
-        pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
-        getData(pxBaseUrl)
-        .then(function (data) {
+    }
+}
+
+const pixabayApiCall = async () => {
+    searchParam = replaceSpaces(userCity);
+    pxBaseUrl = `https://pixabay.com/api/?key=${pxAbayApiKey}&q=${searchParam}&image_type=photo`
+    try {
+        await getData(pxBaseUrl)
+        .then(function(data){
             imgUrl = data.hits[0].largeImageURL;
-            console.log(imgUrl)
+            console.log('3. ', imgUrl)
         })
-         // add data to post request
-        .then(
-            postData('http://localhost:2000/addData', { 
-            country: country, 
-            city: cityDisplay, 
-            temperature: temperature, 
-            tripDate: formattedDate, 
-            daysToTrip: daysToTrip, 
-            imgUrl: imgUrl
-        })
-        )
-        updateUI();
-    })
-});
+    } catch (error) {
+        console.log('Error! (pixabayApiCall)', error)
+    }
+}
+
+const handleSubmit = async () => {
+    try {
+        await geoNamesApiCall();
+        await weatherBitApiCall();
+        await pixabayApiCall();
+    } catch (error) {
+        console.log('Error! (handleSubmit)', error)
+    }
+}
 
 //getData async function to make get request to OpenWeatherMap api (get the weather)
 const getData = async(url) => {
