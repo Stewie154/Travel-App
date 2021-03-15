@@ -10,6 +10,7 @@ let lon;
 let country;
 let userCity;
 let tripDate;
+let formattedDate;
 let daysToTrip;
 let baseUrl;
 let temperature;
@@ -105,7 +106,7 @@ const geoNamesApiCall = async () => {
     //grab year
     let yearValue = document.getElementById('year').value
     //format date
-    let formattedDate = formatDate(tripDate, yearValue)
+    formattedDate = formatDate(tripDate, yearValue)
     baseUrl = `http://api.geonames.org/searchJSON?q=${userCity}&maxRows=10&username=${userName}`
     try {
         await getData(baseUrl)
@@ -175,6 +176,15 @@ const handleSubmit = async () => {
         await geoNamesApiCall();
         await weatherBitApiCall();
         await pixabayApiCall();
+        await postData('http://localhost:2000/addData', {
+            country: country, 
+            city: cityDisplay, 
+            temperature: temperature, 
+            tripDate: formattedDate, 
+            daysToTrip: daysToTrip, 
+            imgUrl: imgUrl
+        })
+        .then(updateUI())
     } catch (error) {
         console.log('Error! (handleSubmit)', error)
     }
@@ -251,9 +261,9 @@ const updateUI = async () => {
 
         //add trip to container
         tripContainer.insertAdjacentHTML('afterbegin', trip);
-        console.log('hello')
+        console.log('UI Updated')
 
     } catch (error){
-        console.log('Error!', error);
+        console.log('Error! (updateUI)', error);
     }
 }
