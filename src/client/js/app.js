@@ -198,3 +198,5 @@ const updateUI = async () => {
         console.log('Error! (updateUI)', error);
     }
 }
+
+export {handleSubmit}
