@@ -61,7 +61,7 @@ app.post('/addData', addData);
 // Setup Server
 const port = 2000;
 const listening = () => {
-    console.log('Server Running');
+    // console.log('Server Running');
     console.log('Server Running on Port: ' + port);
 }
 
